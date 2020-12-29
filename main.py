@@ -12,6 +12,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 import random
 import pickle
+import time
 
 
 class PongPaddle(Widget):
@@ -79,9 +80,6 @@ class PongGame(Widget):
             file.close()
     except:
         record = 0
-    sound = SoundLoader.load('Rayman2.mp3')
-    sound.play()
-    sound.loop = True
 
 
     def serve_ball(self, vel=(0, 5)):
@@ -128,10 +126,8 @@ class PongGame(Widget):
             with open('score.dat', 'wb') as file:
                 pickle.dump(self.record, file)
                 file.close()
-            self.sound.stop()
-            App.get_running_app().stop()
-            PobApp().run()
-
+            #App.get_running_app().stop()
+            quit()
 
     def on_touch_move(self, touch):
         if touch.y < self.height / 3:
@@ -158,10 +154,6 @@ class RaymanApp(App):
 
 class PobApp(App):
     def build(self):
-        sound = SoundLoader.load('Overworld.mp3')
-        sound.play()
-        sound.loop = True
-        self.sound = sound
         self.icon = r'icon.png'
         try:
             with open('score.dat', 'rb') as file:
@@ -182,10 +174,17 @@ class PobApp(App):
         return layout
 
     def callback(self, items):
-        App.get_running_app().stop()
-        self.sound.stop()
-        RaymanApp().run()
+        #PobApp.stop(self)
+        global PobApp
+        PobApp.stop(self)
 
-if __name__ == '__main__':
+def main():
     #RaymanApp().run()
+    soundo = SoundLoader.load('Overworld.mp3')
+    sound = SoundLoader.load('Rayman2.mp3')
     PobApp().run()
+    RaymanApp().run()
+    main()
+
+
+main()
